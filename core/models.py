@@ -20,14 +20,15 @@ class UserManager(BaseUserManager):
 
     def create_superuser(self, email, password):
         """Create Super User."""
-        user = self.create_user(email=email, password=password)
+        user = self.create_user(email, password)
         user.is_staff = True
         user.is_superuser = True
 
-        user.save(self._db)
+        user.save(using=self._db)
         return user
 
 class User(AbstractBaseUser, PermissionsMixin):
+    id = models.AutoField(primary_key=True)
     email = models.EmailField(max_length=254, unique=True)
     name = models.CharField(max_length=254)
     is_active = models.BooleanField(default=True)
