@@ -1,4 +1,4 @@
-FROM python:3.11-alpine3.13
+FROM python:3.11
 LABEL maintainer = "anur.tj"
 
 ENV PYTHONUNBUFFERED 1
