@@ -7,7 +7,8 @@ from rest_framework.viewsets import (
 )
 from rest_framework.mixins import (
     ListModelMixin,
-    UpdateModelMixin
+    UpdateModelMixin,
+    DestroyModelMixin,
 )
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -48,7 +49,8 @@ class RecipeViewSet(ModelViewSet):
 class TagViewSet(
     ListModelMixin, 
     GenericViewSet, 
-    UpdateModelMixin
+    UpdateModelMixin,
+    DestroyModelMixin
 ):
     """Manage tags in database."""
     serializer_class = TagSerializer
