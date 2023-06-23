@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Recipe
+from .models import User, Recipe, Tag
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.translation import gettext_lazy as _
 
@@ -38,5 +38,7 @@ class UserAdmin(BaseUserAdmin):
         }),
     )
 
+
 admin.site.register(User, UserAdmin)
 admin.site.register(Recipe)
+admin.site.register(Tag)
