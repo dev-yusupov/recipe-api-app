@@ -3,7 +3,11 @@ from decimal import Decimal
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 
-from core.models import Recipe, User, Tag
+from core.models import (
+    Recipe, 
+    Tag,
+    Ingredient,
+    )
 
 def create_user(email="test@test.com", password="1234test"):
     """Function creates a user."""
@@ -73,3 +77,14 @@ class ModelTests(TestCase):
         tag = Tag.objects.create(user=user, name="Tag1")
 
         self.assertEqual(str(tag), tag.name)
+    
+    def test_create_ingredient(self):
+        """Test creating ingredients."""
+        user = create_user()
+        ingredient = Ingredient.objects.create(
+            user=user,
+            name="Test1"
+        )
+
+        self.assertEqual(str(ingredient), ingredient.name)
+    

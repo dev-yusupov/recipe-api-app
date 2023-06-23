@@ -12,7 +12,8 @@ from rest_framework.test import APIClient
 
 from core.models import (
     Recipe,
-    Tag
+    Tag,
+    Ingredient
 )
 from recipe.serializers import (
     RecipeSerializer,
@@ -293,4 +294,82 @@ class PrivateRecipeAPITests(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(recipe.tags.count(), 0)
+    
+    def test_create_recipe_with_new_ingredient(self):
+        """Test creating a new recipe with new ingredients."""
+        payload = {
+            "title": "Apple cake",
+            "time_minutes": 60,
+            "price": Decimal("20"),
+            "ingredients": [
+                {'name': 'Apple'},
+                {'name': "milk"},
+            ]
+        }
+
+        response = self.client.post(RECIPE_URL, payload, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        recipes = Recipe.objects.filter(user=self.user)
+        self.assertEqual(recipes.count(), 1)
+        recipe = recipes[0]
+        self.assertEqual(recipe.ingredients.count(), 2)
+        for ingredient in payload["ingredients"]:
+            exists = recipe.ingredients.filter(
+                name=ingredient['name'],
+                user=self.user,
+            ).exists()
+        
+        self.assertTrue(exists)
+
+    
+    def test_create_recipe_with_existing_ingredient(self):
+        """Test creates recipe with existing ingredients."""
+        ingredient = Ingredient.objects.create(user=self.user, name="Orange")
+        payload = {
+            "title": "Apple cake",
+            "time_minutes": 60,
+            "price": Decimal("20"),
+            "ingredients": [
+                {'name': 'Apple'},
+                {'name': "milk"},
+            ]
+        }
+        response = self.client.post(RECIPE_URL, payload, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        recipes = Recipe.objects.filter(user=self.user)
+        self.assertEqual(recipes.count(), 1)
+        recipe = recipes[0]
+        self.assertEqual(recipe.ingredients.count(), 2)
+        for ingredient in payload["ingredients"]:
+            exists = recipe.ingredients.filter(
+                name = ingredient['name'],
+                user=self.user,
+            ).exists()
+            self.assertTrue(exists)
+
+    def test_create_ingredient_on_update(self):
+        """Test creating an ingredient when updating a recipe."""
+        recipe = create_recipe(user=self.user)
+
+        payload = {
+            'ingredients': [
+                {'name': 'Limes'},
+            ]
+        }
+        url = detail_url(recipe.id)
+        response = self.client.patch(url, payload, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        new_ingredient = Ingredient.objects.get(user=self.user, name="Limes")
+        self.assertEqual(new_ingredient, recipe.ingredients.all())
+    
+    def test_update_recipe_assign_ingredient(self):
+        """"""
+        ingredient1 = Ingredient.objects.create(user=self.user, name="Lemon")
+        recipe = create_recipe(user=self.user)
+        recipe.ingredients.add(ingredient1)
+
+        ingredient2 = Ingredient.objects.create(user=self.user, name="Banana")
         
