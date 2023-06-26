@@ -6,6 +6,7 @@ djangorestframework==3.14.0
 drf-spectacular==0.26.2
 inflection==0.5.1
 jsonschema==4.17.3
+Pillow==9.5.0
 psycopg2==2.9.6
 pyrsistent==0.19.3
 pytz==2023.3
