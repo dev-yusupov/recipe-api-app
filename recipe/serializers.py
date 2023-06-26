@@ -4,7 +4,7 @@ Serializers for Recipe APIs
 from rest_framework.serializers import ModelSerializer
 
 from core.models import (
-    Recipe, 
+    Recipe,
     Tag,
     Ingredient
 )
@@ -31,10 +31,10 @@ class RecipeSerializer(ModelSerializer):
 
     class Meta:
         model = Recipe
-        fields = ["id", "title", "time_minutes", "price", "link", "tags",
-                'ingredients',
+        fields = [
+            "id", "title", "time_minutes", "price", "link", "tags", 'ingredients',
                   ]
-        read_only_fields = ["id"]
+        read_only_fields = ['id']
     
     def _get_or_create_ingredients(self, ingredients, recipe):
         auth_user = self.context['request'].user
@@ -77,7 +77,7 @@ class RecipeSerializer(ModelSerializer):
         
         if ingredients is not None:
             instance.ingredients.clear()
-            self._get_or_create_tags(ingredients, instance)
+            self._get_or_create_ingredients(ingredients, instance)
 
         for attr, value in validated_data.items():
             setattr(instance, attr, value)

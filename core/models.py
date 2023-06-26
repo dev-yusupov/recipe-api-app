@@ -2,11 +2,10 @@ from django.db import models
 from django.contrib.auth.models import (
     AbstractBaseUser,
     BaseUserManager,
-    PermissionsMixin
+    PermissionsMixin,
 )
 from django.conf import settings
 
-# Create your models here.
 class UserManager(BaseUserManager):
     """Manager for users."""
     def create_user(self, email, password=None, **extra_field):
@@ -35,9 +34,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
-    USERNAME_FIELD = 'email'
-
     objects = UserManager()
+
+    USERNAME_FIELD = 'email'
 
 class Recipe(models.Model):
     """Recipe objects."""
